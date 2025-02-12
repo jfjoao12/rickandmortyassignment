@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -35,11 +38,12 @@ import coil3.compose.AsyncImage
 fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: CharactersManager) {
     val characters = charactersManager.charactersResponse.value
 
-    LazyColumn {
-
+    LazyColumn (
+        modifier = Modifier
+            .padding(top = 90.dp)
+    ){
         items(characters) { character ->
             CharacterCard(characterItem = character)
-
         }
     }
 
@@ -54,6 +58,7 @@ fun CharacterCard(characterItem: Character) {
         border = BorderStroke(1.dp, Color.Black),
         modifier = Modifier
             //.size(width = 240.dp, height = 125.dp)
+
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
 
@@ -69,12 +74,15 @@ fun CharacterCard(characterItem: Character) {
                         LocalContext.current
                     ).data("${characterItem.image}")
                         .build(),
-                    contentDescription = "${characterItem.name} card"
+                    contentDescription = "${characterItem.name} card",
+                    modifier = Modifier
+                        .clip(CircleShape)
                 )
 
             }
             Column(
                 modifier = Modifier
+                    .align(Alignment.CenterVertically)
                     .padding(5.dp)
             ) {
                 Text(
