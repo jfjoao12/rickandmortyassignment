@@ -1,40 +1,29 @@
 package com.example.rickandmortyassginment.layouts
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import coil3.compose.rememberConstraintsSizeResolver
 import coil3.request.ImageRequest
-import com.example.rickandmortyassginment.R
 import com.example.rickandmortyassginment.api.models.*
-import coil3.compose.AsyncImage
 
 @Composable
-//fun CardLayout(character: Character
 fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: CharactersManager) {
     val characters = charactersManager.charactersResponse.value
 
@@ -43,62 +32,58 @@ fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: Characters
             .padding(top = 90.dp)
     ){
         items(characters) { character ->
-            CharacterCard(characterItem = character)
+            CharacterCard(
+                characterItem = character,
+                modifier = Modifier
+                    .fillMaxWidth()
+
+            )
         }
     }
 
 }
 
 @Composable
-fun CharacterCard(characterItem: Character) {
-    OutlinedCard(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-        ),
-        border = BorderStroke(1.dp, Color.Black),
-        modifier = Modifier
-            //.size(width = 240.dp, height = 125.dp)
-
+fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier) {
+    ElevatedCard(
+        modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 5.dp)
-
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        shape = RoundedCornerShape(16.dp),
     ) {
-        Row {
-            Column(
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(characterItem.image)
+                    .build(),
+                contentDescription = "${characterItem.name} profile picture",
                 modifier = Modifier
-                    .padding(5.dp)
-                    .align(Alignment.CenterVertically)
-            )  {
-                AsyncImage(
-                    model = ImageRequest.Builder(
-                        LocalContext.current
-                    ).data("${characterItem.image}")
-                        .build(),
-                    contentDescription = "${characterItem.name} card",
-                    modifier = Modifier
-                        .clip(CircleShape)
-                )
-
-            }
-            Column(
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .padding(5.dp)
-            ) {
-                Text(
-                    text = "Name: ${characterItem.name}"
-                )
-                Text(
-                    text = "Species: ${characterItem.species} "
-                )
-                Text(
-                    text = "Gender: ${characterItem.gender} "
-                )
-                Text(
-                    text = "Origin: ${characterItem.origin?.name}"
-                )
-            }
+                    .size(120.dp)
+                    .clip(CircleShape)
+            )
+            Text(
+                text = characterItem.name ?: "Unknown",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Species: ${characterItem.species ?: "Unknown"}",
+                fontStyle = FontStyle.Italic
+            )
+            Text(
+                text = "Gender: ${characterItem.gender ?: "Unknown"}",
+                fontStyle = FontStyle.Italic
+            )
+            Text(
+                text = "Origin: ${characterItem.origin?.name ?: "Unknown"}",
+                fontStyle = FontStyle.Italic
+            )
         }
     }
-
 }
+

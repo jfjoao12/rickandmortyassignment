@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RickAndMortyAssginment"
+rootProject.name = "RickAndMortyAssignment - JM"
 include(":app")
  
