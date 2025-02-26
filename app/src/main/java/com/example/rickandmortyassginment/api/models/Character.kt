@@ -1,10 +1,12 @@
 package com.example.rickandmortyassginment.api.models
 
 
+import androidx.room.Entity
 import com.example.rickandmortyassginment.api.Origin
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+@Entity(tableName = "characters")
 @JsonClass(generateAdapter = true)
 data class Character(
     @Json(name = "image")

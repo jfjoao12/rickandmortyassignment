@@ -1,9 +1,9 @@
 package com.example.rickandmortyassginment.api.models
 
-
 import com.example.rickandmortyassginment.api.Info
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+
 
 @JsonClass(generateAdapter = true)
 data class CharactersData(

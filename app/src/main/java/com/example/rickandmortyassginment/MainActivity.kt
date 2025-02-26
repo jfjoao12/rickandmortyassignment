@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import com.example.rickandmortyassginment.api.CharactersManager
+import com.example.rickandmortyassginment.api.db.AppDatabase
 import com.example.rickandmortyassginment.layouts.CharacterLayout
 import com.example.rickandmortyassginment.ui.theme.*
 
@@ -25,6 +26,9 @@ class MainActivity : ComponentActivity() {
             RickAndMortyAssginmentTheme {
                 Scaffold(modifier = Modifier
                     .fillMaxSize()) { innerPadding ->
+
+                    val db = AppDatabase.getInstance(applicationContext)
+
 
                     val characterManager = CharactersManager()
                     App(modifier = Modifier

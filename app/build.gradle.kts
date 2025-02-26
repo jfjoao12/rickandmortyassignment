@@ -45,6 +45,11 @@ dependencies {
     // coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    //coil compose
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+
     // moshi
     implementation(libs.moshi.kotlin)
     implementation(libs.converter.moshi)

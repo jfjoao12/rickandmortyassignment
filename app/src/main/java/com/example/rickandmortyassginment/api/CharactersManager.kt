@@ -5,12 +5,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.room.Database
+import com.example.rickandmortyassginment.api.db.AppDatabase
 import com.example.rickandmortyassginment.api.models.Character
 import com.example.rickandmortyassginment.api.models.CharactersData
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 
-class CharactersManager {
+class CharactersManager(db: AppDatabase) {
     private var _characterResponse = mutableStateOf<List<Character>>(emptyList())
 
     val charactersResponse: MutableState<List<Character>>
@@ -18,9 +23,10 @@ class CharactersManager {
             _characterResponse
         }
     init {
-        getMovies()
+        getCharacters(db)
     }
-    private fun getMovies(){
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun getCharacters(db: AppDatabase){
         val service= Api.retrofitService.getCharacters()
 
         service.enqueue(object : retrofit2.Callback<CharactersData>{
@@ -34,6 +40,10 @@ class CharactersManager {
                     _characterResponse.value = (response.body()?.results ?:
                     emptyList()) as List<Character>
                     Log.i("DataSteam", _characterResponse.value.toString())
+
+                    GlobalScope.launch{
+                        saveDataToDatabase(database = db, movies = _characterResponse.value)
+                    }
                 }
             }
 
@@ -46,5 +56,8 @@ class CharactersManager {
             }
 
         })
+    }
+    private suspend fun saveDataToDatabase(database: AppDatabase, movies: List<Character>){
+        database.characterDao().insertAll(movies)
     }
 }
