@@ -1,6 +1,8 @@
 package com.example.rickandmortyassginment.layouts
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -11,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
-import com.example.rickandmortyassginment.api.models.*
+import com.example.rickandmortyassginment.api.models.Character
+import com.example.rickandmortyassginment.api.CharactersManager
 
 @Composable
 fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: CharactersManager) {
@@ -57,15 +61,36 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(characterItem.image)
-                    .build(),
-                contentDescription = "${characterItem.name} profile picture",
+            Row (
                 modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-            )
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                // Delete button
+                TextButton (
+                    onClick = {  },
+
+                    ) {
+                    Text("Delete")
+                }
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(characterItem.image)
+                        .build(),
+                    contentDescription = "${characterItem.name} profile picture",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                )
+                // Add button
+                TextButton (
+                    onClick = {  },
+
+                    ) {
+                    Text("Add")
+                }
+            }
+
             Text(
                 text = characterItem.name ?: "Unknown",
                 style = MaterialTheme.typography.headlineSmall,

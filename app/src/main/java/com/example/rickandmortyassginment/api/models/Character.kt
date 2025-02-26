@@ -1,6 +1,7 @@
 package com.example.rickandmortyassginment.api.models
 
 
+import com.example.rickandmortyassginment.api.Origin
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

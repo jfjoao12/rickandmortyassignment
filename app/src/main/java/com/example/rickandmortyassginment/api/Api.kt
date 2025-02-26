@@ -1,4 +1,4 @@
-package com.example.rickandmortyassginment.api.models
+package com.example.rickandmortyassginment.api
 
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
