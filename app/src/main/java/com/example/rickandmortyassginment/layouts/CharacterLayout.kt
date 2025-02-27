@@ -67,6 +67,11 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier) {
                     .clip(CircleShape)
             )
             Text(
+                text = characterItem.id.toString() ?: "Unknown",
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
                 text = characterItem.name ?: "Unknown",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold

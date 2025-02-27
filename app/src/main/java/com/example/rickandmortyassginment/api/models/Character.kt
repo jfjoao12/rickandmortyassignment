@@ -6,6 +6,8 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Character(
+    @Json(name = "id")
+    var id: Int,
     @Json(name = "image")
     var image: String?,
     @Json(name = "name")
