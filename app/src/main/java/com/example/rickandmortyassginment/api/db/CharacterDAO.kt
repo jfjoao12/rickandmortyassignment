@@ -11,7 +11,7 @@ interface CharacterDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(character: List<Character>)
 
-    @Query("Select * FROM characters WHERE name = :id")
+    @Query("Select * FROM characters WHERE id = :id")
     fun getCharacterById(id: Int): Character?
 
 

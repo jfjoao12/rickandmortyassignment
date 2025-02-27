@@ -6,7 +6,6 @@ import androidx.room.PrimaryKey
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-
 @Entity(tableName = "characters")
 @JsonClass(generateAdapter = true)
 data class Character(
@@ -22,6 +21,6 @@ data class Character(
     @Json(name = "gender")
     var gender: String?,
     @Json(name = "origin")
-    var originName: String?,
+    var origin: Origin?
     )
 
