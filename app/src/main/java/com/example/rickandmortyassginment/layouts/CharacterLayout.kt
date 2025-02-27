@@ -105,7 +105,7 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier) {
                 fontStyle = FontStyle.Italic
             )
             Text(
-                text = "Origin: ${characterItem.origin?.name ?: "Unknown"}",
+                text = "Origin: ${characterItem.originName?: "Unknown"}",
                 fontStyle = FontStyle.Italic
             )
         }

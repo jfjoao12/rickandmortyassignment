@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     val db = AppDatabase.getInstance(applicationContext)
 
 
-                    val characterManager = CharactersManager()
+                    val characterManager = CharactersManager(db)
                     App(modifier = Modifier
                         .padding(innerPadding),
                         characterManager

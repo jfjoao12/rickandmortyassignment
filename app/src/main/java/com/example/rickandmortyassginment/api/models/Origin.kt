@@ -1,4 +1,4 @@
-package com.example.rickandmortyassginment.api
+package com.example.rickandmortyassginment.api.models
 
 
 import com.squareup.moshi.Json
