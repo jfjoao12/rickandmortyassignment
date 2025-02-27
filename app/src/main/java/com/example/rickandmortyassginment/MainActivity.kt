@@ -33,7 +33,8 @@ class MainActivity : ComponentActivity() {
                     val characterManager = CharactersManager(db)
                     App(modifier = Modifier
                         .padding(innerPadding),
-                        characterManager
+                        characterManager,
+                        db
                     )
                 }
             }
@@ -43,7 +44,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun App(modifier: Modifier, characterManager: CharactersManager) {
+fun App(modifier: Modifier, characterManager: CharactersManager, db: AppDatabase) {
     Scaffold (
         topBar = {
             CenterAlignedTopAppBar(
@@ -60,7 +61,8 @@ fun App(modifier: Modifier, characterManager: CharactersManager) {
         paddingValues.calculateBottomPadding()
         CharacterLayout(
             modifier,
-            characterManager
+            characterManager,
+            db
         )
 
     }

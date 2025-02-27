@@ -9,6 +9,7 @@ import androidx.room.Database
 import com.example.rickandmortyassginment.api.db.AppDatabase
 import com.example.rickandmortyassginment.api.models.Character
 import com.example.rickandmortyassginment.api.models.CharactersData
+import com.example.rickandmortyassginment.api.models.Favourites
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -40,9 +41,9 @@ class CharactersManager(db: AppDatabase) {
                     _characterResponse.value = (response.body()?.results ?:
                     emptyList()) as List<Character>
                     Log.i("DataSteam", _characterResponse.value.toString())
-
+                    
                     GlobalScope.launch{
-                        saveDataToDatabase(database = db, movies = _characterResponse.value)
+                        saveDataToDatabase(database = db, characters = _characterResponse.value)
                     }
                 }
             }
@@ -57,7 +58,25 @@ class CharactersManager(db: AppDatabase) {
 
         })
     }
-    private suspend fun saveDataToDatabase(database: AppDatabase, movies: List<Character>){
-        database.characterDao().insertAll(movies)
+
+    private suspend fun saveDataToDatabase(database: AppDatabase, characters: List<Character>){
+        database.characterDao().insertAll(characters)
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun addFavourite(database: AppDatabase, character: Character) {
+        val favourite = Favourites(characterId = character.id)
+        GlobalScope.launch {
+            database.favouritesDao().insert(favourite)
+        }
+
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun deleteFavourite(database: AppDatabase, character: Character) {
+        val favourite = Favourites(characterId = character.id)
+        GlobalScope.launch {
+            database.favouritesDao().deleteFavouritesById(favourite.id)
+        }
     }
 }

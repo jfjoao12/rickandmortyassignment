@@ -1,5 +1,7 @@
 package com.example.rickandmortyassginment.layouts
 
+import android.service.autofill.OnClickAction
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,9 +28,14 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.example.rickandmortyassginment.api.models.Character
 import com.example.rickandmortyassginment.api.CharactersManager
+import com.example.rickandmortyassginment.api.db.AppDatabase
+import com.example.rickandmortyassginment.api.models.Favourites
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlin.math.log
 
 @Composable
-fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: CharactersManager) {
+fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: CharactersManager, db: AppDatabase) {
     val characters = charactersManager.charactersResponse.value
 
     LazyColumn (
@@ -39,8 +46,9 @@ fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: Characters
             CharacterCard(
                 characterItem = character,
                 modifier = Modifier
-                    .fillMaxWidth()
-
+                    .fillMaxWidth(),
+                charactersManager,
+                db
             )
         }
     }
@@ -48,7 +56,7 @@ fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: Characters
 }
 
 @Composable
-fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier) {
+fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier, charactersManager: CharactersManager, db: AppDatabase) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -68,7 +76,10 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier) {
             ) {
                 // Delete button
                 TextButton (
-                    onClick = {  },
+                    onClick = {
+                        Log.i("Data", "${characterItem.name} removed to favourites")
+                        charactersManager.deleteFavourite(db, characterItem)
+                    },
 
                     ) {
                     Text("Delete")
@@ -84,7 +95,10 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier) {
                 )
                 // Add button
                 TextButton (
-                    onClick = {  },
+                    onClick = {
+                        Log.i("Data", "Character ${characterItem.name} added to DB ")
+                        charactersManager.addFavourite(db, characterItem)
+                    }
 
                     ) {
                     Text("Add")
@@ -110,5 +124,8 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier) {
             )
         }
     }
+
 }
+
+
 
