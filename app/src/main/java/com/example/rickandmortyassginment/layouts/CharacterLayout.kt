@@ -99,7 +99,6 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier, chara
                         Log.i("Data", "Character ${characterItem.name} added to DB ")
                         charactersManager.addFavourite(db, characterItem)
                     }
-
                     ) {
                     Text("Add")
                 }

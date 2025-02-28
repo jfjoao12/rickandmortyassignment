@@ -74,9 +74,19 @@ class CharactersManager(db: AppDatabase) {
 
     @OptIn(DelicateCoroutinesApi::class)
     fun deleteFavourite(database: AppDatabase, character: Character) {
-        val favourite = Favourites(characterId = character.id)
         GlobalScope.launch {
-            database.favouritesDao().deleteFavouritesById(favourite.id)
+            val favourite = database.favouritesDao().getFavouriteByCharacterId(character.id)
+            if (favourite != null) {
+                database.favouritesDao().deleteFavouritesByCharacterId(character.id)
+                Log.i("DB Character Manager Test", "Deleted favourite character with ID: ${character.id}")
+            } else {
+                Log.i("DB Character Manager Test", "Character ID: ${character.id} was not found in favourites")
+            }
+            val favouritesAfter = database.favouritesDao().getAllFavourites()
+            Log.i("DB", "After Deletion - Favourites Table:")
+            for (fav in favouritesAfter) {
+                Log.i("DB", "ID=${fav.id}, characterId=${fav.characterId()}")
+            }
         }
     }
 }
