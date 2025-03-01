@@ -65,27 +65,45 @@ class CharactersManager(db: AppDatabase) {
 
     @OptIn(DelicateCoroutinesApi::class)
     fun addFavourite(database: AppDatabase, character: Character) {
-        val favourite = Favourites(characterId = character.id)
+        val favourite = Favourites(
+            character.id,
+            character.image,
+            character.name,
+            character.species,
+            character.gender,
+            character.origin
+        )
         GlobalScope.launch {
-            database.favouritesDao().insert(favourite)
-        }
+            // If record is found in the table, it will throw an error message in the console
+            val findCharacter = database.favouritesDao().getFavouriteNameById(character.id)
+            if (findCharacter != null) {
+                Log.i(
+                    "DB INSERTED (error): ",
+                    "${character.name} is already in database")
 
+            } else {
+                database.favouritesDao().insert(favourite)
+                Log.i(
+                    "DB INSERTED:",
+                    "${character.name} to database")
+            }
+        }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     fun deleteFavourite(database: AppDatabase, character: Character) {
         GlobalScope.launch {
-            val favourite = database.favouritesDao().getFavouriteByCharacterId(character.id)
-            if (favourite != null) {
-                database.favouritesDao().deleteFavouritesByCharacterId(character.id)
-                Log.i("DB Character Manager Test", "Deleted favourite character with ID: ${character.id}")
+            // If record is not found in the Table, it will throw an error message in the console
+            val findCharacter = database.favouritesDao().getFavouriteNameById(character.id)
+            if (findCharacter != null) {
+                database.favouritesDao().deleteFavouriteById(character.id)
+                Log.i(
+                    "DB DELETED:",
+                    "${character.name} from database")
             } else {
-                Log.i("DB Character Manager Test", "Character ID: ${character.id} was not found in favourites")
-            }
-            val favouritesAfter = database.favouritesDao().getAllFavourites()
-            Log.i("DB", "After Deletion - Favourites Table:")
-            for (fav in favouritesAfter) {
-                Log.i("DB", "ID=${fav.id}, characterId=${fav.characterId()}")
+                Log.i(
+                    "DB DELETED (error):",
+                    "${character.name} was not found in database")
             }
         }
     }

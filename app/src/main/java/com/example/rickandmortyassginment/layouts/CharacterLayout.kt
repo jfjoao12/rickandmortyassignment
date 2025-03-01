@@ -77,7 +77,6 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier, chara
                 // Delete button
                 TextButton (
                     onClick = {
-                        Log.i("Data", "${characterItem.name} removed to favourites")
                         charactersManager.deleteFavourite(db, characterItem)
                     },
 
@@ -96,8 +95,7 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier, chara
                 // Add button
                 TextButton (
                     onClick = {
-                        Log.i("Data", "Character ${characterItem.name} added to DB ")
-                        charactersManager.addFavourite(db, characterItem)
+                       charactersManager.addFavourite(db, characterItem)
                     }
                     ) {
                     Text("Add")

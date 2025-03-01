@@ -7,20 +7,19 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 
-@Entity(
-    tableName = "favourites",
-    foreignKeys = [
-        ForeignKey(
-            entity = Character::class,  // Reference the Character table
-            parentColumns = ["id"],     // Column in Character table
-            childColumns = ["characterId"], // Column in Favourites table
-            onDelete = ForeignKey.CASCADE  // Delete the favourite if the character is deleted
-        )
-    ],
-)
+@Entity(tableName = "favourites")
 @JsonClass(generateAdapter = true)
 data class Favourites (
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     val id: Int = 0,
-    val characterId: Int
+    @Json(name = "image")
+    var image: String?,
+    @Json(name = "name")
+    var name: String?,
+    @Json(name = "species")
+    var species: String?,
+    @Json(name = "gender")
+    var gender: String?,
+    @Json(name = "origin")
+    var origin: Origin?
 )

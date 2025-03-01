@@ -16,20 +16,10 @@ interface FavouritesDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(favourite: Favourites)
 
-    @Query("SELECT * FROM favourites")
-    fun getAllFavourites(): List<Favourites>
+    @Query("SELECT name FROM favourites WHERE id = :id")
+    fun getFavouriteNameById(id: Int): String
 
-    @Query("SELECT * FROM favourites WHERE characterId = :characterId")
-    fun getFavouriteByCharacterId(characterId: Int): Favourites?
-
-    @Query("DELETE FROM favourites WHERE characterId = :characterId")
-    fun deleteFavouritesByCharacterId(characterId: Int)
-
-    @Query(
-        "SELECT c.name AS cname, f.id as fid"  +
-        "FROM Character, Favourite" +
-        "WHERE favourite.id = :characterId"
-    )
-    fun getCharacterNameByFavourite(characterId: Int): String?
+    @Query("DELETE FROM favourites WHERE id = :id")
+    fun deleteFavouriteById(id: Int)
 
 }
