@@ -28,6 +28,7 @@ android {
                 "proguard-rules.pro"
             )
         }
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -38,6 +39,10 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 }
 
@@ -59,7 +64,17 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.common)
     annotationProcessor(libs.androidx.room.room.compiler)
-    ksp("androidx.room:room-compiler:2.6.1")
+    ksp(libs.androidx.room.room.compiler)
+
+    // glance
+    // For AppWidgets support
+    implementation(libs.androidx.glance.appwidget)
+
+    // For interop APIs with Material 3
+    implementation(libs.androidx.glance.material3)
+
+    // For interop APIs with Material 2
+    implementation(libs.androidx.glance.material)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

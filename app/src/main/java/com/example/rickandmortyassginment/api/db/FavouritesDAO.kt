@@ -21,5 +21,4 @@ interface FavouritesDAO {
 
     @Query("DELETE FROM favourites WHERE id = :id")
     fun deleteFavouriteById(id: Int)
-
 }
