@@ -8,14 +8,13 @@ class Converters {
     fun fromOrigin(origin: Origin?): String? {
         return origin?.let {
             it.name;
-            it.url
         }
     }
 
     @TypeConverter
     fun toOriginName(value: String?): Origin? {
         return value?.let {
-            Origin(name = it, url = it)
+            Origin(name = it)
         }
     }
 }

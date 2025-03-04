@@ -18,4 +18,7 @@ interface CharacterDAO {
 
     @Delete
     fun deleteFavouriteRecord(favourites: Favourites)
+
+    @Query("Select * FROM characters")
+    fun getAllCharacters(): List<Character>
 }

@@ -8,6 +8,4 @@ import com.squareup.moshi.JsonClass
 data class Origin(
     @Json(name = "name")
     var name: String?,
-    @Json(name = "url")
-    var url: String?
 )

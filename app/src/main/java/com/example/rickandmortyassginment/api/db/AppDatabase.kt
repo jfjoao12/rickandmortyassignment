@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.example.rickandmortyassginment.api.models.Character
 import com.example.rickandmortyassginment.api.models.Favourites
 
-@Database(entities = [Character::class, Favourites::class], version = 8, exportSchema = false)
+@Database(entities = [Character::class, Favourites::class], version = 10, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun characterDao(): CharacterDAO

@@ -117,8 +117,11 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier, chara
             )
             Text(
                 text = "Origin: ${characterItem.origin!!?.name?: "Unknown"}",
-                fontStyle = FontStyle.Italic
+                fontStyle = FontStyle.Italic ,
+
             )
+            Log.d("OriginData", characterItem?.origin.toString())
+
         }
     }
 
