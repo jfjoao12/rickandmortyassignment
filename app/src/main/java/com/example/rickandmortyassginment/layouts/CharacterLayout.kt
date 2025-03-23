@@ -1,8 +1,9 @@
 package com.example.rickandmortyassginment.layouts
 
-import android.service.autofill.OnClickAction
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,11 +13,22 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,10 +41,11 @@ import coil3.request.ImageRequest
 import com.example.rickandmortyassginment.api.models.Character
 import com.example.rickandmortyassginment.api.CharactersManager
 import com.example.rickandmortyassginment.api.db.AppDatabase
-import com.example.rickandmortyassginment.api.models.Favourites
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlin.math.log
+import kotlinx.coroutines.withContext
 
 @Composable
 fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: CharactersManager, db: AppDatabase) {
@@ -48,15 +61,22 @@ fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: Characters
                 modifier = Modifier
                     .fillMaxWidth(),
                 charactersManager,
-                db
+                db,
             )
         }
     }
 
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
-fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier, charactersManager: CharactersManager, db: AppDatabase) {
+fun CharacterCard(
+    characterItem: Character,
+    modifier: Modifier = Modifier,
+    charactersManager: CharactersManager,
+    db: AppDatabase
+) {
     ElevatedCard(
         modifier = modifier
             .fillMaxWidth()
@@ -69,20 +89,10 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier, chara
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Row (
+            Box (
                 modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .fillMaxWidth()
             ) {
-                // Delete button
-                TextButton (
-                    onClick = {
-                        charactersManager.deleteFavourite(db, characterItem)
-                    },
-
-                    ) {
-                    Text("Delete")
-                }
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(characterItem.image)
@@ -91,15 +101,18 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier, chara
                     modifier = Modifier
                         .size(120.dp)
                         .clip(CircleShape)
+                        .align(Alignment.Center)
                 )
-                // Add button
-                TextButton (
-                    onClick = {
-                       charactersManager.addFavourite(db, characterItem)
-                    }
-                    ) {
-                    Text("Add")
-                }
+                // Menu Add
+                MinimalDropdownMenu(
+                    db,
+                    characterItem,
+                    charactersManager,
+                    modifier = Modifier
+                        .align(
+                            alignment = Alignment.TopEnd
+                        )
+                )
             }
 
             Text(
@@ -124,7 +137,43 @@ fun CharacterCard(characterItem: Character, modifier: Modifier = Modifier, chara
 
         }
     }
+}
 
+@Composable
+fun MinimalDropdownMenu(
+    db: AppDatabase,
+    characterItem: Character,
+    charactersManager: CharactersManager,
+    modifier: Modifier
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier
+            .padding(0.dp, 0.dp, 0.dp, 0.dp),
+    ) {
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            Text(
+                text = "Favourite",
+                modifier = Modifier
+                    .align(alignment = Alignment.CenterHorizontally)
+            )
+            HorizontalDivider(thickness = 2.dp)
+            DropdownMenuItem(
+                text = { Text("Add") },
+                onClick = { charactersManager.addFavourite(db, characterItem)}
+            )
+            DropdownMenuItem(
+                text = { Text("Delete") },
+                onClick = { charactersManager.deleteFavourite(db, characterItem)}
+            )
+        }
+    }
 }
 
 

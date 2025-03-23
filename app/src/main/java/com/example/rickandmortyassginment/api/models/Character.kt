@@ -21,6 +21,6 @@ data class Character(
     @Json(name = "gender")
     var gender: String?,
     @Json(name = "origin")
-    var origin: Origin?
+    var origin: Origin?,
     )
 

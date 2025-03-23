@@ -5,14 +5,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.room.Database
 import com.example.rickandmortyassginment.api.db.AppDatabase
 import com.example.rickandmortyassginment.api.models.Character
 import com.example.rickandmortyassginment.api.models.CharactersData
 import com.example.rickandmortyassginment.api.models.Favourites
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
 
@@ -83,6 +84,7 @@ class CharactersManager(db: AppDatabase) {
 
             } else {
                 database.favouritesDao().insert(favourite)
+
                 Log.i(
                     "DB INSERTED:",
                     "${character.name} to database")
@@ -99,11 +101,13 @@ class CharactersManager(db: AppDatabase) {
                 database.favouritesDao().deleteFavouriteById(character.id)
                 Log.i(
                     "DB DELETED:",
-                    "${character.name} from database")
+                    "${character.name} from database"
+                )
             } else {
                 Log.i(
                     "DB DELETED (error):",
-                    "${character.name} was not found in database")
+                    "${character.name} was not found in database"
+                )
             }
         }
     }

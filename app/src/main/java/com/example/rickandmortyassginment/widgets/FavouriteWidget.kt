@@ -35,14 +35,12 @@ class FavouriteWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val db = AppDatabase.getInstance(context.applicationContext)
         val characterItem = withContext(Dispatchers.IO) {
-            db.characterDao().getCharacterById(4)
+            db.characterDao().getCharacterById(1)
         }
         val bitmap = characterItem?.image?.let { imageUrl ->
             loadBitmapFromUrl(imageUrl)
         }
-
-
-        provideContent {
+            provideContent {
             Column(
                 modifier = GlanceModifier
                     .fillMaxSize()
@@ -70,21 +68,21 @@ class FavouriteWidget : GlanceAppWidget() {
                     ),
                 )
                 Text(
-                    text ="Species: ${characterItem?.species}",
+                    text ="Species: ${characterItem?.species ?: "Unknown"}",
                     style = TextStyle(
                         fontStyle = FontStyle.Italic,
                         color = GlanceTheme.colors.onBackground
                         ),
                 )
                 Text(
-                    text ="Gender: ${characterItem?.gender}",
+                    text ="Gender: ${characterItem?.gender ?: "Unknown"}",
                     style = TextStyle(
                         fontStyle = FontStyle.Italic,
                         color = GlanceTheme.colors.onBackground
                     ),
                 )
                 Text(
-                    text ="Origin: ${characterItem?.origin!!?.name}",
+                    text ="Origin: ${characterItem?.origin!!.name ?: "Unknown"}",
                     style = TextStyle(
                         fontStyle = FontStyle.Italic,
                         color = GlanceTheme.colors.onBackground
@@ -93,6 +91,10 @@ class FavouriteWidget : GlanceAppWidget() {
             }
         }
     }
+}
+
+class WidgetReceiver : GlanceAppWidgetReceiver() {
+    override val glanceAppWidget: GlanceAppWidget = FavouriteWidget()
 }
 
 private suspend fun loadBitmapFromUrl(imageUrl: String): Bitmap? {
@@ -108,7 +110,5 @@ private suspend fun loadBitmapFromUrl(imageUrl: String): Bitmap? {
 }
 
 
-class WidgetReceiver : GlanceAppWidgetReceiver() {
-    override val glanceAppWidget: GlanceAppWidget = FavouriteWidget()
-}
+
 
