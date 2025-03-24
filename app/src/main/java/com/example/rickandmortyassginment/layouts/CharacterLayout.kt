@@ -2,10 +2,9 @@ package com.example.rickandmortyassginment.layouts
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -41,35 +40,11 @@ import coil3.request.ImageRequest
 import com.example.rickandmortyassginment.api.models.Character
 import com.example.rickandmortyassginment.api.CharactersManager
 import com.example.rickandmortyassginment.api.db.AppDatabase
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-@Composable
-fun CharacterLayout(modifier: Modifier = Modifier, charactersManager: CharactersManager, db: AppDatabase) {
-    val characters = charactersManager.charactersResponse.value
-
-    LazyColumn (
-        modifier = Modifier
-            .padding(top = 90.dp)
-    ){
-        items(characters) { character ->
-            CharacterCard(
-                characterItem = character,
-                modifier = Modifier
-                    .fillMaxWidth(),
-                charactersManager,
-                db,
-            )
-        }
-    }
-
-}
 
 @SuppressLint("CoroutineCreationDuringComposition")
-@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun CharacterCard(
     characterItem: Character,

@@ -27,6 +27,7 @@ interface FavouritesDAO {
     @Query("SELECT name FROM favourites WHERE id = :id")
     fun getFavouriteNameById(id: Int): String
 
-
+    @Query("SELECT * FROM favourites")
+    fun getAllFavourites(): List<Character>
 
 }

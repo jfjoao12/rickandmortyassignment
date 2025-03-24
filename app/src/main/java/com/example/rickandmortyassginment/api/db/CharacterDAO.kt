@@ -21,4 +21,5 @@ interface CharacterDAO {
 
     @Query("Select * FROM characters")
     fun getAllCharacters(): List<Character>
+
 }
