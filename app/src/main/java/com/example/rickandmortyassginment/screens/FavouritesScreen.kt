@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.layout.LazyLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,14 +47,16 @@ fun AllFavouritesLayout(
     paddingValues: PaddingValues
 ) {
     //val characters = charactersManager.charactersResponse.value
-    var charactersFavourite by remember { mutableStateOf(listOf<Character>()) }  // Hold the characters in state
-
-    LaunchedEffect(Unit) {  // Run coroutine when composable is first launched
-        charactersFavourite = withContext(Dispatchers.IO) {
-            db.favouritesDao().getAllFavourites()
-        }
+    var charactersFavourite by remember {
+        mutableStateOf(emptyList<Character>()) // Initialize empty list
     }
 
+
+    LaunchedEffect(Unit) {
+        db.favouritesDao().getAllFavourites().collect { favourites ->
+            charactersFavourite = favourites //
+        }
+    }
     LazyColumn (
         modifier = Modifier
             .padding(paddingValues)

@@ -13,6 +13,7 @@ import com.example.rickandmortyassginment.api.models.Character
 import com.example.rickandmortyassginment.api.models.Favourites
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Dao
@@ -28,6 +29,5 @@ interface FavouritesDAO {
     fun getFavouriteNameById(id: Int): String
 
     @Query("SELECT * FROM favourites")
-    fun getAllFavourites(): List<Character>
-
+    fun getAllFavourites(): Flow<List<Character>>
 }
