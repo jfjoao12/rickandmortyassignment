@@ -94,12 +94,9 @@ fun CharacterCard(
                             .build(),
                         contentDescription = "${characterItem.name} profile picture",
                         modifier = Modifier
-                            .sharedBounds(
+                            .sharedElement(
                                 sharedTransitionScope.rememberSharedContentState(key = "characterImage-${characterItem.id}"),
                                 animatedVisibilityScope = animatedVisibilityScope,
-                                enter = fadeIn(),
-                                exit = fadeOut(),
-                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
                             )
                             .size(120.dp)
                             .clip(CircleShape)
