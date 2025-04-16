@@ -20,6 +20,8 @@ data class Character(
     var species: String?,
     @Json(name = "gender")
     var gender: String?,
+    @Json(name = "status")
+    var status: String?,
     @Json(name = "origin")
     var origin: Origin?,
     )

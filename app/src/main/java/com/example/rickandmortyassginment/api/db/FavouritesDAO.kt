@@ -19,11 +19,13 @@ import kotlinx.coroutines.launch
 @Dao
 interface FavouritesDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(favourite: Favourites)
+    fun insert(favourites: Favourites)
+
+    @Delete
+    fun delete(favourites: Favourites)
 
     @Query("DELETE FROM favourites WHERE id = :id")
     fun deleteFavouriteById(id: Int)
-
 
     @Query("SELECT name FROM favourites WHERE id = :id")
     fun getFavouriteNameById(id: Int): String

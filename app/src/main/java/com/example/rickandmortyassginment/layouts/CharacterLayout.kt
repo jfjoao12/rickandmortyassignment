@@ -2,6 +2,11 @@ package com.example.rickandmortyassginment.layouts
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,6 +40,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import com.example.rickandmortyassginment.api.models.Character
@@ -44,72 +51,113 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun CharacterCard(
+    navController: NavHostController,
     characterItem: Character,
     modifier: Modifier = Modifier,
     charactersManager: CharactersManager,
-    db: AppDatabase
+    db: AppDatabase,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    sharedTransitionScope: SharedTransitionScope
 ) {
-    ElevatedCard(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(16.dp),
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
+    with (sharedTransitionScope){
+        ElevatedCard(
+            modifier = modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .sharedElement(
+                    sharedTransitionScope.rememberSharedContentState(key = "characterCard-${characterItem.id}"),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                ),
+
+            shape = RoundedCornerShape(16.dp),
+            onClick = {
+                navController.navigate("characterDetails/${characterItem.id}")
+            }
         ) {
-            Box (
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(16.dp)
             ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(characterItem.image)
-                        .build(),
-                    contentDescription = "${characterItem.name} profile picture",
+                Box(
                     modifier = Modifier
-                        .size(120.dp)
-                        .clip(CircleShape)
-                        .align(Alignment.Center)
-                )
-                // Menu Add
-                MinimalDropdownMenu(
-                    db,
-                    characterItem,
-                    charactersManager,
+                        .fillMaxWidth()
+                ) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(characterItem.image)
+                            .build(),
+                        contentDescription = "${characterItem.name} profile picture",
+                        modifier = Modifier
+                            .sharedBounds(
+                                sharedTransitionScope.rememberSharedContentState(key = "characterImage-${characterItem.id}"),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                enter = fadeIn(),
+                                exit = fadeOut(),
+                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds()
+                            )
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .align(Alignment.Center)
+
+                    )
+                    // Menu Add
+                    MinimalDropdownMenu(
+                        db,
+                        characterItem,
+                        charactersManager,
+                        modifier = Modifier
+                            .align(
+                                alignment = Alignment.TopEnd
+                            )
+                    )
+                }
+                Text(
                     modifier = Modifier
-                        .align(
-                            alignment = Alignment.TopEnd
-                        )
+                        .sharedBounds(
+                            sharedTransitionScope.rememberSharedContentState(key = "characterName-${characterItem.id}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        ),
+                    text = characterItem.name ?: "Unknown",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
                 )
+                Text(
+                    modifier = Modifier
+                        .sharedBounds(
+                            sharedTransitionScope.rememberSharedContentState(key = "characterSpecies-${characterItem.id}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        ),
+                    text = "Species: ${characterItem.species ?: "Unknown"}",
+                    fontStyle = FontStyle.Italic
+                )
+                Text(
+                    modifier = Modifier
+                        .sharedBounds(
+                            sharedTransitionScope.rememberSharedContentState(key = "characterGender-${characterItem.id}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        ),
+                    text = "Gender: ${characterItem.gender ?: "Unknown"}",
+                    fontStyle = FontStyle.Italic
+                )
+                Text(
+                    modifier = Modifier
+                        .sharedBounds(
+                            sharedTransitionScope.rememberSharedContentState(key = "characterOrigin-${characterItem.id}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        ),
+                    text = "Origin: ${characterItem.origin!!.name ?: "Unknown"}",
+                    fontStyle = FontStyle.Italic,
+
+                )
+                Log.d("OriginData", characterItem?.origin.toString())
+
             }
-
-            Text(
-                text = characterItem.name ?: "Unknown",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Species: ${characterItem.species ?: "Unknown"}",
-                fontStyle = FontStyle.Italic
-            )
-            Text(
-                text = "Gender: ${characterItem.gender ?: "Unknown"}",
-                fontStyle = FontStyle.Italic
-            )
-            Text(
-                text = "Origin: ${characterItem.origin!!?.name?: "Unknown"}",
-                fontStyle = FontStyle.Italic ,
-
-            )
-            Log.d("OriginData", characterItem?.origin.toString())
-
         }
     }
 }
